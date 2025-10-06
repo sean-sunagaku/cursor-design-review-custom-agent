@@ -1,0 +1,7 @@
+{
+  "name": "設計レビュー相棒",
+  "description": "Cursor カスタムエージェント用のシステムプロンプトとコマンド定義",
+  "language": "ja",
+  "base_prompt": "./base_prompt.md",
+  "commands_directory": "../commands"
+}
