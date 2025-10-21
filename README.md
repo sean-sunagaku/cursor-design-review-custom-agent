@@ -1,28 +1,43 @@
 # cursor-design-review-custom-agent
 
-開発設計の壁打ちに特化した Cursor カスタムエージェントの土台です。ベースプロンプトと 3 種類のカスタムコマンドを用意し、SOLID 原則・各種設計原則・主要デザインパターンの観点でレビューや改善提案を引き出せます。
+開発設計の壁打ちに特化した Cursor カスタムエージェントのプロンプトとカスタムコマンドです。SOLID 原則・各種設計原則・主要デザインパターンから実装/インフラ再設計までシームレスにサポートします。
 
 ## 構成
-- `agent/base_prompt.md`: エージェントのシステムプロンプト。
-- `agent/manifest.json`: エージェント設定メタデータ。
-- `.cursor/commands/design-review-solid.md`: `/design-review-solid` で呼び出す SOLID 原則チェックテンプレート。
-- `.cursor/commands/design-review-principles.md`: `/design-review-principles` で呼び出す 原則バランス診断テンプレート。
-- `.cursor/commands/design-review-pattern.md`: `/design-review-pattern` で呼び出す デザインパターン適用チェックテンプレート。
+- `agent/base_prompt.md`: エージェントのシステムプロンプト本体。
+- `.cursor/commands/design-review/design/solid.md`: SOLID 原則観点のレビューコマンド定義。
+- `.cursor/commands/design-review/design/principles.md`: DRY/KISS/YAGNI/LoD 観点のレビューコマンド定義。
+- `.cursor/commands/design-review/design/pattern.md`: 主要デザインパターン 20 種の適合性チェックコマンド定義。
+- `.cursor/commands/design-review/alternative-patterns.md`: 既存案に対する代替パターン提案コマンド定義。
+- `.cursor/commands/design-review/summary.md`: 各レビュー結果を統合するサマリーコマンド定義。
+- `.cursor/commands/design-review/recreate.md`: レビュー結果を踏まえた設計書再構築コマンド定義。
+- `.cursor/commands/design-review/implement/basic.md`: 基本設計レベルの実装ドキュメント生成コマンド定義。
+- `.cursor/commands/design-review/implement/detail.md`: 詳細設計レベルの実装ドキュメント生成コマンド定義。
+- `.cursor/commands/design-review/implement/infra-recreate.md`: インフラ構成の再設計ドキュメント生成コマンド定義。
 
-## 使い方
+## セットアップ手順
 1. Cursor の「Custom Agent」を開き、新規エージェントを追加します。
-2. 手早く設定したい場合は `agent/setup_template.md` を開き、セクションごとにコピー & ペーストします。
-3. テンプレートを使わない場合は、`agent/base_prompt.md` の内容をシステムプロンプト欄に貼り付けます。
-4. `agent/manifest.json` の情報を参考に、エージェント名・説明などのメタ情報を設定します。
-5. Custom Command を 3 つ追加し、それぞれの設定に該当する JSON ファイルの `name` `description` `prompt` を貼り付けてください。
-   - 入力欄のプレースホルダーも `input_placeholder` を参考に設定できます。
-6. エージェントを保存し、設計相談時に呼び出してください。
+2. System Prompt 欄には `agent/base_prompt.md` の内容を貼り付けます。
+3. エージェント名・説明・言語などのメタ情報は、Cursor の作成画面で直接設定します。
+4. 設定を保存し、チャットから呼び出してレビューや再設計の相談に利用します。
 
-- `.cursor/commands` に用意した Markdown を置いた状態で Cursor を開くと、チャット入力欄で `/` を押すだけでコマンド一覧に表示されます。
-- `/design-review-solid`, `/design-review-principles`, `/design-review-pattern` を選ぶと、それぞれの指示テンプレートがチャットに差し込まれます。
-- チーム共有したい場合は `.cursor/commands` フォルダをリポジトリに含めておけば同じコマンドを利用できます。
+`.cursor/commands` フォルダをプロジェクトに含めた状態で Cursor を開くと、チャット入力欄で `/` を押すだけでコマンド一覧に表示されます。UI ではパス形式で表示されるため、`/design-review/design/solid` など任意のコマンドを選択すると、対応する指示テンプレートが自動で差し込まれます。
+
+## カスタムコマンド一覧
+### 設計観点チェック
+- `/design-review/design/solid` (`.cursor/commands/design-review/design/solid.md`): SOLID 原則ごとの判定・根拠・改善策を整理します。
+- `/design-review/design/principles` (`.cursor/commands/design-review/design/principles.md`): DRY/KISS/YAGNI/LoD の観点から複雑さや重複度を診断します。
+- `/design-review/design/pattern` (`.cursor/commands/design-review/design/pattern.md`): 主要 20 パターンの適用可否と注意点を精査します。
+
+### 洞察の統合・再設計
+- `/design-review/alternative-patterns` (`.cursor/commands/design-review/alternative-patterns.md`): 既存設計に対する代替パターン候補を 3 案提示します。
+- `/design-review/summary` (`.cursor/commands/design-review/summary.md`): 各コマンドの知見を俯瞰し、重複やトレードオフを整理します。
+- `/design-review/recreate` (`.cursor/commands/design-review/recreate.md`): レビュー結果を踏まえて新しい設計書を再構築します。
+
+### 実装・インフラドキュメント
+- `/design-review/implement/basic` (`.cursor/commands/design-review/implement/basic.md`): 基本設計レベルの実装ドキュメントを生成します。
+- `/design-review/implement/detail` (`.cursor/commands/design-review/implement/detail.md`): 詳細設計レベルのドキュメントを作成します。
+- `/design-review/implement/infra-recreate` (`.cursor/commands/design-review/implement/infra-recreate.md`): インフラアーキテクチャを再設計するドキュメントをまとめます。
 
 ## 運用メモ
-- レビュー対象の素材（設計書・ユースケースメモ・UML 等）は、コマンド実行時に入力欄へ貼り付けます。
-- 返答は箇条書きで読みやすく整理されるため、必要に応じてタスク化やドキュメント更新に転記してください。
-- プロンプトはプレーンテキストなので、プロジェクトごとに調整・拡張しても構いません。
+- `/summary` → `/recreate` → `/implementation` など連鎖的に使うと、レビューから再設計・アウトプット作成までを一気通貫で進められます。
+- プロンプトは、プロジェクトに合わせて調整・拡張してください。
